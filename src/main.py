@@ -21,5 +21,16 @@ def follow_file(filepath):
                 continue
             yield line
 
+failed_attempts = {}
+
 for line in follow_file(LOG_PATH):
-    print(line)
+    match = get_login_info(line)
+    if match:
+        ip = match['ip']
+        if ip in failed_attempts:
+            failed_attempts[ip] += 1
+            print(f"status is {failed_attempts}")
+        else:
+            failed_attempts[ip] = 1
+
+print(f"status is {failed_attempts}")
