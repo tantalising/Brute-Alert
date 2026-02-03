@@ -1,10 +1,11 @@
 import os
+import sys
 import time
 import asyncio
 from login_tracker import LoginTracker
 from parser import get_login_info
 
-LOG_PATH = "test.log" #"/var/log/auth.log"
+LOG_PATH = "test.log" #"/var/log/auth.log" <-- use this when not testing
 HIGHEST_TRY = 5
 WAITING_PERIOD = 5
 
@@ -36,5 +37,9 @@ async def main():
                 login_tracker.log(ip)
 
 if __name__ == "__main__":
-    print("Brute Force Detector Started. Monitoring logs...")
-    asyncio.run(main())
+    print("Brute Force Detector Started. \nPress CTRL+C to exit.")
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print('\rExiting...')
+        sys.exit(0)

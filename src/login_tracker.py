@@ -9,9 +9,7 @@ class LoginTracker:
 
     async def _start_clock(self, seconds):
         while True:
-            print('clock started')
             await asyncio.sleep(seconds)
-            print("clearing attempts")
             self._failed_attempts.clear()
     
     def _print_if_too_many_attempt(self, ip):
