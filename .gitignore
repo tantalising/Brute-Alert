@@ -1,0 +1,13 @@
+# Ignore virtual environment folders
+bin/
+lib/
+lib64
+include/
+pyvenv.cfg
+.venv/
+venv/
+env/
+
+# Ignore python compiled files
+__pycache__/
+*.pyc
