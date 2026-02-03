@@ -36,4 +36,5 @@ async def main():
                 login_tracker.log(ip)
 
 if __name__ == "__main__":
+    print("Brute Force Detector Started. Monitoring logs...")
     asyncio.run(main())
