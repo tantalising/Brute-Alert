@@ -21,6 +21,10 @@ def follow_file(filepath):
                 continue
             yield line
 
+def print_if_too_many_attempt(current_try, highest_try, ip):
+    if current_try >= highest_try:
+        print(f'ALERT! Brute force attempt detected from ip: {ip}')
+
 failed_attempts = {}
 
 for line in follow_file(LOG_PATH):
@@ -29,7 +33,7 @@ for line in follow_file(LOG_PATH):
         ip = match['ip']
         if ip in failed_attempts:
             failed_attempts[ip] += 1
-            print(f"status is {failed_attempts}")
+            print_if_too_many_attempt(failed_attempts[ip], HIGHEST_TRY, ip)
         else:
             failed_attempts[ip] = 1
 
