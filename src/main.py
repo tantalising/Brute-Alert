@@ -1,7 +1,7 @@
 import os
 import time
 import asyncio
-from typing import Generator
+from login_tracker import LoginTracker
 from parser import get_login_info
 
 LOG_PATH = "test.log" #"/var/log/auth.log"
@@ -23,34 +23,17 @@ async def follow_file(filepath):
                continue
             yield line
 
-def print_if_too_many_attempt(current_try, highest_try, ip):
-    if current_try >= highest_try:
-        print(f'ALERT! Brute force attempt detected from ip: {ip}')
-
-
-async def start_clock(seconds, attempts):
-    while True:
-        print('clock started')
-        await asyncio.sleep(seconds)
-        print("clearing attempts")
-        attempts.clear()
-
-
-failed_attempts = {}
 
 async def main():
-    asyncio.create_task(start_clock(WAITING_PERIOD, failed_attempts))
+    login_tracker = LoginTracker(WAITING_PERIOD, HIGHEST_TRY)
     async for line in follow_file(LOG_PATH):
         match = get_login_info(line)
         if match:
             ip = match['ip']
-            if ip in failed_attempts:
-                failed_attempts[ip] += 1
-                print_if_too_many_attempt(failed_attempts[ip], HIGHEST_TRY, ip)
+            if login_tracker.exists(ip):
+                login_tracker.increase_login_count(ip)
             else:
-                failed_attempts[ip] = 1
-
-    print(f"status is {failed_attempts}")
+                login_tracker.log(ip)
 
 if __name__ == "__main__":
     asyncio.run(main())
